@@ -1,0 +1,17 @@
+# Python environment and cache
+.venv/
+__pycache__/
+*.pyc
+
+# Audio and transcripts - private, never upload
+recordings/
+transcripts/
+*.wav
+*.mp3
+*.m4a
+
+# Secrets
+.env
+
+# Editor
+.vscode/
