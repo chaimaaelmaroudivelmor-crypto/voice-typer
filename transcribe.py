@@ -1,38 +1,40 @@
 """
-STEP 3 - Turn a recording into text
+Turn audio into text with faster-whisper (runs offline on the CPU).
 
-Goal:
-    Load a speech model once, then transcribe a .wav file into text.
-
-Write two functions:
-    load_model()                         -> returns a model
-    transcribe(model, audio, language)   -> returns (text, detected_language)
-
-Hints:
-    - Read the faster-whisper README "Usage" section.
-    - Create the model with WhisperModel("small", device="cpu", compute_type="int8").
-    - model.transcribe() returns two things: segments and info.
-      Join the text of all segments into one string.
-    - language can be None (auto-detect), "en", "fr" or "ar".
-    - The first run downloads the model (needs internet once).
-
-Test:
-    Record 3 test files with record.py: one in English, one in French, one in Arabic.
-    Transcribe each one. Note which language works best. Try Darija too.
-    Write what you found in the README under "What I learned".
+Usage:
+    python transcribe.py                      -> transcribes recordings/test.wav
+    python transcribe.py path/to/file.wav fr  -> force a language (en, fr, ar)
 """
+
+import sys
+
+from faster_whisper import WhisperModel
+
+MODEL_SIZE = "small"  # "base" = faster, "small" = balanced, "medium" = more accurate
 
 
 def load_model():
-    # TODO
-    pass
+    print(f"Loading model '{MODEL_SIZE}'...")
+    return WhisperModel(MODEL_SIZE, device="cpu", compute_type="int8")
 
 
 def transcribe(model, audio, language=None):
-    # TODO
-    pass
+    """audio can be a file path or a numpy array (16 kHz, mono, float32)."""
+    segments, info = model.transcribe(audio, language=language, vad_filter=True)
+    text = " ".join(segment.text.strip() for segment in segments).strip()
+    return text, info.language
+
+
+def transcribe_segments(model, audio, language=None):
+    """Same as transcribe(), but returns a list of (start, end, text) for timestamps."""
+    segments, info = model.transcribe(audio, language=language, vad_filter=True)
+    return [(s.start, s.end, s.text.strip()) for s in segments], info.language
 
 
 if __name__ == "__main__":
-    # TODO: load the model, transcribe recordings/test.wav, print the text
-    pass
+    path = sys.argv[1] if len(sys.argv) > 1 else "recordings/test.wav"
+    language = sys.argv[2] if len(sys.argv) > 2 else None
+
+    model = load_model()
+    text, detected = transcribe(model, path, language)
+    print(f"[{detected}] {text}")
