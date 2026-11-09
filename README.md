@@ -4,10 +4,10 @@
 
 ## Features
 
-- [ ] Record audio from the microphone
-- [ ] Transcribe audio to text (English, French, Arabic)
-- [ ] Dictation mode: hold a key, speak, text appears at the cursor
-- [ ] Meeting mode: record a meeting and save a written transcript
+- [x] Record audio from the microphone
+- [x] Transcribe audio to text (English, French, Arabic)
+- [x] Dictation mode: hold a key, speak, text appears at the cursor
+- [x] Meeting mode: record a meeting and save a written transcript
 
 ## Privacy
 
@@ -28,7 +28,19 @@ pip install -r requirements.txt
 
 ## Usage
 
-<!-- Fill this in as you finish each feature. Example: python dictate.py -->
+Activate the environment first: `.venv\Scripts\activate`
+
+| Command | What it does |
+|---|---|
+| `python record.py` | Records 5 seconds to `recordings/test.wav` |
+| `python transcribe.py` | Transcribes `recordings/test.wav` |
+| `python transcribe.py file.wav fr` | Transcribes a file in a given language (`en`, `fr`, `ar`) |
+| `python dictate.py` | Dictation: hold **F9**, speak, release, the text is pasted at the cursor |
+| `python meeting.py` | Records until Enter, saves a timestamped transcript in `transcripts/` |
+
+Settings (hotkey, language, model size) are at the top of each file.
+
+The first run downloads the speech model (internet needed once). After that everything works offline.
 
 ## What I learned
 
